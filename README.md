@@ -5,13 +5,13 @@ Este documento detalla la hoja de ruta técnica y operativa para el desarrollo d
 ## 1. Stack Tecnológico Seleccionado
 Para garantizar eficiencia y escalabilidad en un entorno universitario:
 
-* **Backend:** Java 17+ con Spring Boot (Monolito Modular).
+* **Backend:** Java 21 con Spring Boot (Monolito Modular).
 * **Bases de Datos:** 
     * **MariaDB:** Usuarios, suscripciones, agenda y seguridad.
     * **MongoDB:** Resultados de diagnósticos, logs de simuladores y retos.
 * **Frontend:**
     * **Web:** React.js (Landing page comercial y administración).
-    * **Móvil:** React Native (Interacción diaria, simuladores y retos).
+    * **Móvil:** React Native (Interacción diaria, simuladores y retos).(esto para luego)
 * **Infraestructura:** Docker & Docker Compose para contenedores locales.
 
 ## 2. Módulos Críticos del MVP
