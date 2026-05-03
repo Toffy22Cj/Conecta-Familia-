@@ -1,4 +1,4 @@
-package com.conectafamilia.backend.repository;
+package com.conectafamilia.backend.repository.mongo;
 
 import com.conectafamilia.backend.model.document.ForumPost;
 import org.springframework.data.mongodb.repository.MongoRepository;

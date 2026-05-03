@@ -2,8 +2,8 @@ package com.conectafamilia.backend.service;
 
 import com.conectafamilia.backend.model.document.Scenario;
 import com.conectafamilia.backend.model.document.SimulatorLog;
-import com.conectafamilia.backend.repository.ScenarioRepository;
-import com.conectafamilia.backend.repository.SimulatorLogRepository;
+import com.conectafamilia.backend.repository.mongo.ScenarioRepository;
+import com.conectafamilia.backend.repository.mongo.SimulatorLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

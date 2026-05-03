@@ -4,7 +4,7 @@ import com.conectafamilia.backend.model.dto.auth.JwtResponse;
 import com.conectafamilia.backend.model.dto.auth.LoginRequest;
 import com.conectafamilia.backend.model.dto.auth.RegisterRequest;
 import com.conectafamilia.backend.model.entity.User;
-import com.conectafamilia.backend.repository.UserRepository;
+import com.conectafamilia.backend.repository.jpa.UserRepository;
 import com.conectafamilia.backend.security.jwt.JwtProvider;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

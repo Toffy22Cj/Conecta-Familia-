@@ -1,4 +1,4 @@
-package com.conectafamilia.backend.repository;
+package com.conectafamilia.backend.repository.mongo;
 
 import com.conectafamilia.backend.model.document.Challenge;
 import org.springframework.data.mongodb.repository.MongoRepository;

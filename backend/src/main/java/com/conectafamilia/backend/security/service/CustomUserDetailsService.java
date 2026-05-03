@@ -1,7 +1,7 @@
 package com.conectafamilia.backend.security.service;
 
 import com.conectafamilia.backend.model.entity.User;
-import com.conectafamilia.backend.repository.UserRepository;
+import com.conectafamilia.backend.repository.jpa.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

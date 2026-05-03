@@ -1,4 +1,4 @@
-package com.conectafamilia.backend.repository;
+package com.conectafamilia.backend.repository.jpa;
 
 import com.conectafamilia.backend.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;

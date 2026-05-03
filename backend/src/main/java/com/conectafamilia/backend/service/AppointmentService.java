@@ -4,8 +4,8 @@ import com.conectafamilia.backend.model.entity.Appointment;
 import com.conectafamilia.backend.model.entity.User;
 import com.conectafamilia.backend.model.enums.AppointmentStatus;
 import com.conectafamilia.backend.model.enums.Role;
-import com.conectafamilia.backend.repository.AppointmentRepository;
-import com.conectafamilia.backend.repository.UserRepository;
+import com.conectafamilia.backend.repository.jpa.AppointmentRepository;
+import com.conectafamilia.backend.repository.jpa.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
