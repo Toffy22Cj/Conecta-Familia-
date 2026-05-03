@@ -1,0 +1,17 @@
+services:
+#  mariadb:
+#    image: mariadb:latest
+#    container_name: conectafamilia_mariadb
+#    environment:
+#      MYSQL_ROOT_PASSWORD: root_password
+#      MYSQL_DATABASE: conectafamilia_db
+#      MYSQL_USER: admin
+#      MYSQL_PASSWORD: admin
+#    ports:
+#      - "3306:3306"
+
+  mongodb:
+    image: mongo:4.4
+    container_name: conectafamilia_mongodb
+    ports:
+      - "27017:27017"
