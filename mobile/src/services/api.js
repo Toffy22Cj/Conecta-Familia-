@@ -92,7 +92,7 @@ export const retosService = {
   },
 
   toggleComplete: async (id) => {
-    const response = await api.put(`/retos/${id}/toggle`);
+    const response = await api.patch(`/retos/${id}/toggle`);
     return response.data;
   },
 };
@@ -194,7 +194,7 @@ export const citasService = {
 
 export const diagnosticoService = {
   saveResult: async (responses) => {
-    const response = await api.post("/diagnostico", { responses });
+    const response = await api.post("/diagnostico/results", { answers: responses });
     return response.data;
   },
 };

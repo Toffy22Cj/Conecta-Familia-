@@ -82,6 +82,99 @@ function forumMachineReducer(state, action) {
   }
 }
 
+const questions = [
+  {
+    q: "¿Con qué frecuencia hay conflictos verbales en casa?",
+    options: [
+      { text: "Rara vez o nunca", pts: 3 },
+      { text: "Ocasionalmente", pts: 2 },
+      { text: "Frecuentemente", pts: 1 },
+      { text: "Casi todos los días", pts: 0 }
+    ]
+  },
+  {
+    q: "¿Cómo se toman las decisiones importantes?",
+    options: [
+      { text: "En conjunto, dialogando", pts: 3 },
+      { text: "Un adulto decide y explica", pts: 2 },
+      { text: "Un adulto decide sin consultar", pts: 1 },
+      { text: "No hay acuerdo, genera discusiones", pts: 0 }
+    ]
+  },
+  {
+    q: "¿Qué sucede cuando alguien comete un error?",
+    options: [
+      { text: "Se dialoga para aprender", pts: 3 },
+      { text: "Se ignora pero causa tensión", pts: 2 },
+      { text: "Se critica severamente", pts: 1 },
+      { text: "Hay castigos desproporcionados", pts: 0 }
+    ]
+  },
+  {
+    q: "¿Cuánto tiempo de calidad pasan juntos a la semana?",
+    options: [
+      { text: "Más de 10 horas", pts: 3 },
+      { text: "Entre 5 y 10 horas", pts: 2 },
+      { text: "Menos de 5 horas", pts: 1 },
+      { text: "Casi nada", pts: 0 }
+    ]
+  },
+  {
+    q: "¿Cómo se demuestran el afecto?",
+    options: [
+      { text: "Abiertamente con palabras y acciones", pts: 3 },
+      { text: "A veces, en ocasiones especiales", pts: 2 },
+      { text: "Pocas veces, cuesta expresarlo", pts: 1 },
+      { text: "Rara vez o nunca hay muestras de afecto", pts: 0 }
+    ]
+  },
+  {
+    q: "¿Las responsabilidades del hogar están divididas?",
+    options: [
+      { text: "Sí, de manera equitativa", pts: 3 },
+      { text: "Más o menos, uno hace más que otro", pts: 2 },
+      { text: "No, casi todo recae en una persona", pts: 1 },
+      { text: "Nadie asume responsabilidades claras", pts: 0 }
+    ]
+  },
+  {
+    q: "¿Se respetan los límites personales y espacios de cada uno?",
+    options: [
+      { text: "Siempre se respeta la privacidad", pts: 3 },
+      { text: "Generalmente sí", pts: 2 },
+      { text: "A veces hay invasión de privacidad", pts: 1 },
+      { text: "No hay respeto por el espacio personal", pts: 0 }
+    ]
+  },
+  {
+    q: "¿Cómo reaccionan ante situaciones de alto estrés externo?",
+    options: [
+      { text: "Nos apoyamos mutuamente", pts: 3 },
+      { text: "Cada uno se aísla por su cuenta", pts: 2 },
+      { text: "Aumentan las discusiones", pts: 1 },
+      { text: "Nos culpamos entre nosotros", pts: 0 }
+    ]
+  },
+  {
+    q: "¿Con qué frecuencia cenan/comen juntos sin pantallas?",
+    options: [
+      { text: "Casi todos los días", pts: 3 },
+      { text: "Fines de semana", pts: 2 },
+      { text: "Rara vez", pts: 1 },
+      { text: "Nunca", pts: 0 }
+    ]
+  },
+  {
+    q: "¿Sientes que tu familia es un lugar seguro para expresarte?",
+    options: [
+      { text: "Completamente", pts: 3 },
+      { text: "En la mayoría de los casos", pts: 2 },
+      { text: "A veces tengo miedo a ser juzgado", pts: 1 },
+      { text: "Para nada", pts: 0 }
+    ]
+  }
+];
+
 const askPermissionAndInit = async () => {
   const { status: existingStatus } = await Notifications.getPermissionsAsync();
   let finalStatus = existingStatus;
@@ -740,8 +833,8 @@ const DashboardScreen = ({ navigation, themeMode, toggleTheme }) => {
     if (diagnosticoStep === 11 && diagnosticoResponses.length === 10) {
       try {
         await diagnosticoService.saveResult(diagnosticoResponses);
-      } catch {
-        console.warn("API saveResult failed.");
+      } catch (error) {
+        console.warn("API saveResult failed:", error?.response?.status, error?.response?.data || error.message);
       }
     }
     setDiagnosticoStep(0);
