@@ -670,9 +670,8 @@ const DashboardScreen = ({ navigation, themeMode, toggleTheme }) => {
   const styles = useMemo(() => createStyles(activeTheme, width), [activeTheme, width]);
 
   useEffect(() => {
-    if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
-      UIManager.setLayoutAnimationEnabledExperimental(true);
-    }
+    // LayoutAnimation is no longer experimental in the New Architecture
+    // UIManager.setLayoutAnimationEnabledExperimental is a no-op and causes warnings
 
     Animated.timing(fadeAnim, {
       toValue: 1,

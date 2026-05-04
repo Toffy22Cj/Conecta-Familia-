@@ -30,7 +30,7 @@ const LoginScreen = ({ navigation }) => {
       const data = await authService.login(email, password);
       navigation.reset({
         index: 0,
-        routes: [{ name: 'Home' }],
+        routes: [{ name: 'Dashboard' }],
       });
     } catch (error) {
       console.error(error);
