@@ -434,13 +434,9 @@ function Dashboard({ onNavigate }) {
   const addCita = async () => {
     if (!newCita.specialistId || !newCita.fecha.trim() || !newCita.hora.trim())
       return;
-    console.log(
-      "[Dashboard] Token before addCita:",
-      localStorage.getItem("token") ? "YES" : "NO",
-    );
     const specialist = specialists.find((s) => s.id == newCita.specialistId);
     const payload = {
-      specialist: { id: newCita.specialistId },
+      specialistId: Number(newCita.specialistId),
       appointmentDate: `${newCita.fecha}T${newCita.hora}:00`,
       notes: newCita.tipo,
     };
@@ -453,26 +449,27 @@ function Dashboard({ onNavigate }) {
           ...created,
           name:
             specialist?.fullName ||
-            created.specialist?.fullName ||
+            created.name ||
             "Especialista",
           fecha: newCita.fecha,
           hora: newCita.hora,
           status: "proxima",
         },
       ]);
+      setNewCita({
+        specialistId: "",
+        name: "",
+        especialidad: "",
+        fecha: "",
+        hora: "",
+        tipo: "Sesión virtual (Zoom)",
+      });
+      setShowNewCita(false);
+      showSaved("✓ Cita agendada correctamente");
     } catch (e) {
       console.error("Error creating appointment", e);
+      showSaved("⚠ No se pudo agendar la cita. Intenta iniciar sesión de nuevo.");
     }
-    setNewCita({
-      specialistId: "",
-      name: "",
-      especialidad: "",
-      fecha: "",
-      hora: "",
-      tipo: "Sesión virtual (Zoom)",
-    });
-    setShowNewCita(false);
-    showSaved("✓ Cita agendada correctamente");
   };
 
   const showSaved = (msg) => {
