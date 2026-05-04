@@ -1,6 +1,6 @@
 package com.conectafamilia.backend.controller;
 
-import com.conectafamilia.backend.model.document.Challenge;
+import com.conectafamilia.backend.model.entity.Challenge;
 import com.conectafamilia.backend.model.entity.UserChallengeStatus;
 import com.conectafamilia.backend.service.ChallengeService;
 import org.springframework.beans.factory.annotation.Autowired;

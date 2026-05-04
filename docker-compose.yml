@@ -9,9 +9,3 @@ services:
       MYSQL_PASSWORD: admin
     ports:
       - "3306:3306"
-
-  mongodb:
-    image: mongo:4.4
-    container_name: conectafamilia_mongodb
-    ports:
-      - "27017:27017"

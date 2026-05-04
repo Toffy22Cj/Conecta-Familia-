@@ -1,7 +1,7 @@
 package com.conectafamilia.backend.service;
 
-import com.conectafamilia.backend.model.document.ForumPost;
-import com.conectafamilia.backend.repository.mongo.ForumPostRepository;
+import com.conectafamilia.backend.model.entity.ForumPost;
+import com.conectafamilia.backend.repository.jpa.ForumPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

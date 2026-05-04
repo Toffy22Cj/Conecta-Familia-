@@ -42,7 +42,7 @@ const SimulatorScreen = ({ navigation }) => {
         setScenarios(response.data);
         setCurrentScenario(response.data[0]);
       } else {
-        // Usar fallback si no hay datos en MongoDB
+        // Usar fallback si no hay datos en MariaDB
         setScenarios([FALLBACK_SCENARIO]);
         setCurrentScenario(FALLBACK_SCENARIO);
       }
