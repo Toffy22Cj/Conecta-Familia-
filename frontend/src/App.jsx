@@ -5,6 +5,8 @@ import heroImg from './assets/hero_family.png';
 import Login from './components/Login';
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
+import TermsAndConditions from './components/TermsAndConditions';
+import Footer from './components/Footer';
 
 function App() {
   const [currentView, setCurrentView] = useState('home');
@@ -32,6 +34,9 @@ function App() {
 
       case 'dashboard':
         return <Dashboard onNavigate={handleNavigate} />;
+
+      case 'terms':
+        return <TermsAndConditions onNavigate={handleNavigate} />;
 
       case 'home':
       default:
@@ -133,8 +138,8 @@ function App() {
   // Solo mostrar navbar en home (Login y Register tienen su propio botón "Volver")
   const showNavbar = currentView === 'home';
 
-  // Dashboard y Login/Register se renderizan fuera del container para ocupar todo el ancho
-  if (currentView === 'dashboard' || currentView === 'login' || currentView === 'register') {
+  // Dashboard, Login, Register y Terms se renderizan fuera del container para ocupar todo el ancho
+  if (currentView === 'dashboard' || currentView === 'login' || currentView === 'register' || currentView === 'terms') {
     return renderContent();
   }
 
@@ -177,6 +182,8 @@ function App() {
         {/* Main Content Area */}
         {renderContent()}
       </div>
+
+      {showNavbar && <Footer onNavigate={handleNavigate} />}
     </>
   );
 }

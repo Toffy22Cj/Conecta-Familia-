@@ -32,6 +32,8 @@ import {
   authService,
   diagnosticoService,
 } from "../services/api";
+import SpecialistView from "./SpecialistView";
+import AdminView from "./AdminView";
 
 function Dashboard({ onNavigate }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -169,6 +171,7 @@ function Dashboard({ onNavigate }) {
     correo: "familia@correo.com",
     telefono: "",
   });
+  const [currentUser, setCurrentUser] = useState(null);
   const [notifs, setNotifs] = useState({
     retos: true,
     foro: true,
@@ -310,6 +313,7 @@ function Dashboard({ onNavigate }) {
         const savedUser = localStorage.getItem("user");
         if (savedUser) {
           const user = JSON.parse(savedUser);
+          setCurrentUser(user);
           setPerfil({
             nombre: user.fullName || user.nombre || "Usuario",
             correo: user.email || user.correo || "",
@@ -496,6 +500,8 @@ function Dashboard({ onNavigate }) {
     { id: "diagnostico", label: "Diagnóstico Familiar", icon: HeartHandshake },
     { id: "foro", label: "Foro Comunitario", icon: MessageCircle },
     { id: "citas", label: "Agenda de Citas", icon: Calendar },
+    { id: "especialistas", label: "Panel de Especialista", icon: Users },
+    ...(currentUser?.role === "ADMIN" ? [{ id: "admin", label: "Administración", icon: Settings }] : []),
     { id: "ajustes", label: "Ajustes", icon: Settings },
   ];
 
@@ -1374,6 +1380,10 @@ function Dashboard({ onNavigate }) {
         return renderForo();
       case "citas":
         return renderCitas();
+      case "especialistas":
+        return <SpecialistView />;
+      case "admin":
+        return <AdminView />;
       case "ajustes":
         return renderAjustes();
       case "inicio":

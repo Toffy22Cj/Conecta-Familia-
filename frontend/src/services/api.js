@@ -184,4 +184,22 @@ export const diagnosticoService = {
   },
 };
 
+export const specialistService = {
+  getPatients: async () => {
+    const response = await api.get("/especialistas/pacientes");
+    return response.data || [];
+  },
+};
+
+export const adminService = {
+  getUsers: async () => {
+    const response = await api.get("/admin/users");
+    return response.data || [];
+  },
+  promoteToSpecialist: async (userId) => {
+    const response = await api.patch(`/admin/users/${userId}/promote`);
+    return response.data;
+  },
+};
+
 export default api;
