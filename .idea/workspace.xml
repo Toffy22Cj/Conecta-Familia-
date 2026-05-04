@@ -2,9 +2,69 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9080bcea-d40e-4890-b465-ad9a037a26d6" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Guía de Contenidos para Trabajo Social - Conecta Familia (1).pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Planificación y Requerimientos del Proyecto - Conecta Familia (1).pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/config/DataSeeder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/controller/AppointmentController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/controller/AuthController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/controller/ChallengeController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/controller/DiagnosticController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/controller/ForumController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/controller/SimulatorController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/model/document/Challenge.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/model/document/DiagnosticResult.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/model/document/ForumPost.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/model/document/Scenario.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/model/document/SimulatorLog.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/model/dto/DiagnosticSubmissionDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/model/dto/QuestionResponseDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/model/dto/auth/JwtResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/model/dto/auth/LoginRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/model/dto/auth/RegisterRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/model/entity/Appointment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/model/entity/Subscription.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/model/entity/User.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/model/entity/UserChallengeStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/model/enums/AppointmentStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/model/enums/ClientType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/model/enums/PlanType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/model/enums/Role.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/model/enums/SubscriptionStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/repository/jpa/AppointmentRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/repository/jpa/UserChallengeStatusRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/repository/jpa/UserRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/repository/mongo/ChallengeRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/repository/mongo/DiagnosticResultRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/repository/mongo/ForumPostRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/repository/mongo/ScenarioRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/repository/mongo/SimulatorLogRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/security/SecurityConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/security/jwt/JwtAuthenticationFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/security/jwt/JwtEntryPoint.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/security/jwt/JwtProvider.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/security/service/CustomUserDetailsService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/service/AppointmentService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/service/ChallengeService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/service/DiagnosticService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/service/ForumService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/service/SimulatorService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/sudo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/check-security.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/Navbar.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/pages/AuthPage.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/pages/Dashboard.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/pages/DiagnosticPage.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/pages/LandingPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/ConectaFamiliaBackendApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/conectafamilia/backend/ConectaFamiliaBackendApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/LandingPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/LandingPage.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +91,7 @@
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "Merging main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/home/carlos/Proyectos/Conecta-Familia/backend",

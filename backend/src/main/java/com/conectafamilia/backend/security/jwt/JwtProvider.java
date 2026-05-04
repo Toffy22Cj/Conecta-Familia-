@@ -46,8 +46,16 @@ public class JwtProvider {
         try {
             Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
             return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            // Log error
+        } catch (SignatureException e) {
+            System.err.println("Firma JWT inválida: " + e.getMessage());
+        } catch (MalformedJwtException e) {
+            System.err.println("Token JWT malformado: " + e.getMessage());
+        } catch (ExpiredJwtException e) {
+            System.err.println("Token JWT expirado: " + e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            System.err.println("Token JWT no soportado: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.err.println("La cadena de claims JWT está vacía: " + e.getMessage());
         }
         return false;
     }

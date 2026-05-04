@@ -1,28 +1,33 @@
 :root {
-  /* Color Palette */
-  --primary: #4F46E5; /* Indigo */
+  /* High-Fidelity Color Palette */
+  --primary: #4F46E5;      /* Indigo */
   --primary-hover: #4338CA;
-  --secondary: #9333EA; /* Purple */
-  --accent: #F472B6; /* Pink */
+  --secondary: #9333EA;    /* Purple */
+  --accent: #F472B6;       /* Pink */
   
-  --background: #F9FAFB; /* Off-white */
+  --background: #F8FAFC;   /* Modern Light Gray/Blue */
   --surface: #FFFFFF;
   
-  --text-main: #111827;
-  --text-muted: #6B7280;
+  --text-main: #1E293B;    /* Slate 800 */
+  --text-muted: #64748B;   /* Slate 500 */
   --dark: #0f172a;
   --light: #f8fafc;
-  --gray: #64748b;
-  --glass: rgba(255, 255, 255, 0.7);
+  --gray: #94a3b8;
   
-  /* Utilities */
-  --radius-lg: 16px;
+  /* Glassmorphism Tokens */
+  --glass: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  
+  /* Modern Utilities */
+  --radius-lg: 24px;       /* Softer corners */
   --radius-md: 12px;
   --radius-sm: 8px;
   
-  --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+  --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
   --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-glow: 0 0 20px rgba(79, 70, 229, 0.15);
+  
   --font-main: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
