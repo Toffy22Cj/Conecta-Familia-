@@ -49,8 +49,18 @@ const RegisterScreen = ({ navigation }) => {
         { text: 'OK', onPress: () => navigation.navigate('Login') }
       ]);
     } catch (error) {
-      console.error(error);
-      Alert.alert('Error', 'No se pudo crear la cuenta. Inténtalo de nuevo.');
+      let errorMessage = 'No se pudo crear la cuenta. Inténtalo de nuevo.';
+      if (error?.response?.data) {
+        if (typeof error.response.data === 'string') {
+          errorMessage = error.response.data;
+        } else if (error.response.data.errors && error.response.data.errors.length > 0) {
+          errorMessage = error.response.data.errors[0].defaultMessage;
+        } else if (error.response.data.message) {
+          errorMessage = error.response.data.message;
+        }
+      }
+      console.error("Registro fallido:", errorMessage);
+      Alert.alert('Error', errorMessage);
     } finally {
       setLoading(false);
     }
