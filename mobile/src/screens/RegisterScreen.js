@@ -43,7 +43,6 @@ const RegisterScreen = ({ navigation }) => {
         fullName,
         email,
         password,
-        role: 'USUARIO',
         clientType: 'INDIVIDUAL',
       });
       Alert.alert('Éxito', 'Cuenta creada con éxito. Ahora puedes iniciar sesión.', [

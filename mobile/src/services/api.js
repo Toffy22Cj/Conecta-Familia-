@@ -55,6 +55,7 @@ export const authService = {
     if (response.data.token) {
       await SecureStore.setItemAsync("token", response.data.token);
       const userData = {
+        id: response.data.id,
         email: response.data.email,
         role: response.data.role,
         fullName: response.data.fullName,
@@ -68,7 +69,6 @@ export const authService = {
     const response = await api.post("/auth/register", {
       ...userData,
       email: userData.email.trim().toLowerCase(),
-      role: userData.role || "USUARIO",
       clientType: userData.clientType || "INDIVIDUAL",
     });
     return response.data;
@@ -85,4 +85,116 @@ export const authService = {
   },
 };
 
-export default api;
+export const retosService = {
+  getAll: async () => {
+    const response = await api.get("/retos");
+    return response.data;
+  },
+
+  toggleComplete: async (id) => {
+    const response = await api.put(`/retos/${id}/toggle`);
+    return response.data;
+  },
+};
+
+export const foroService = {
+  getThreads: async () => {
+    const response = await api.get("/foro/threads");
+    const rawThreads = response.data || [];
+    const user = await authService.getCurrentUser();
+    const userId = user?.id || null;
+
+    return rawThreads.map((thread) => ({
+      ...thread,
+      body: thread.content || "",
+      author: thread.authorName || "Usuario",
+      time: thread.createdAt
+        ? new Date(thread.createdAt).toLocaleDateString()
+        : "Ahora",
+      replies: thread.comments ? thread.comments.length : 0,
+      likes: thread.likedBy ? thread.likedBy.length : 0,
+      liked: thread.likedBy ? thread.likedBy.includes(userId) : false,
+      avatar: thread.authorName
+        ? thread.authorName.substring(0, 2).toUpperCase()
+        : "U",
+      comments: thread.comments
+        ? thread.comments.map((comment) => ({
+            ...comment,
+            time: comment.createdAt
+              ? new Date(comment.createdAt).toLocaleDateString()
+              : "Ahora",
+            avatar: comment.authorName
+              ? comment.authorName.substring(0, 2).toUpperCase()
+              : "U",
+          }))
+        : [],
+    }));
+  },
+
+  getThreadById: async (threadId) => {
+    const response = await api.get(`/foro/threads/${threadId}`);
+    return response.data;
+  },
+
+  createThread: async (threadData) => {
+    const response = await api.post("/foro/threads", threadData);
+    return response.data;
+  },
+
+  addComment: async (threadId, commentData) => {
+    const response = await api.post(
+      `/foro/threads/${threadId}/comments`,
+      commentData,
+    );
+    return response.data;
+  },
+
+  editComment: async (threadId, commentId, newContent) => {
+    const response = await api.put(
+      `/foro/threads/${threadId}/comments/${commentId}`,
+      newContent,
+      {
+        headers: { "Content-Type": "text/plain" },
+      },
+    );
+    return response.data;
+  },
+
+  deleteComment: async (threadId, commentId) => {
+    const response = await api.delete(
+      `/foro/threads/${threadId}/comments/${commentId}`,
+    );
+    return response.data;
+  },
+
+  toggleLike: async (threadId) => {
+    const response = await api.post(`/foro/threads/${threadId}/like`);
+    return response.data;
+  },
+
+  updateThreadState: async (threadId, event) => {
+    const response = await api.put(`/foro/threads/${threadId}/state`, {
+      event,
+    });
+    return response.data;
+  },
+};
+
+export const citasService = {
+  getAll: async () => {
+    const response = await api.get("/citas");
+    return response.data;
+  },
+
+  create: async (citaData) => {
+    const response = await api.post("/citas", citaData);
+    return response.data;
+  },
+};
+
+export const diagnosticoService = {
+  saveResult: async (responses) => {
+    const response = await api.post("/diagnostico", { responses });
+    return response.data;
+  },
+};

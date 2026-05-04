@@ -1,24 +1,31 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 
 const glyphs = {
-  arrowLeft: '<',
-  calendar: '##',
-  checkCircle: 'OK',
-  chevronRight: '>',
-  clipboardList: '[]',
-  heartHandshake: 'CF',
-  lock: '#',
-  logOut: '->',
-  mail: '@',
-  messageSquare: '...',
-  user: 'U',
-  xCircle: 'X',
+  activity: "⚡",
+  arrowLeft: "<",
+  calendar: "📅",
+  checkCircle: "✓",
+  chevronRight: ">",
+  clipboardList: "📋",
+  heartHandshake: "🤝",
+  home: "🏠",
+  lock: "🔒",
+  logOut: "🚪",
+  mail: "@",
+  messageSquare: "💬",
+  settings: "⚙️",
+  smile: "😊",
+  target: "🎯",
+  thumbsUp: "👍",
+  user: "👤",
+  users: "👥",
+  xCircle: "✗",
 };
 
-const Icon = ({ name, color = '#1E293B', size = 24, style }) => {
+const Icon = ({ name, color = "#1E293B", size = 24, style }) => {
   const fontSize = Math.max(10, Math.round(size * 0.42));
-  const label = glyphs[name] || '?';
+  const label = glyphs[name] || "?";
 
   return (
     <View
@@ -43,13 +50,13 @@ const Icon = ({ name, color = '#1E293B', size = 24, style }) => {
 const styles = StyleSheet.create({
   icon: {
     borderWidth: 1.5,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   label: {
-    fontWeight: '800',
+    fontWeight: "800",
     includeFontPadding: false,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
 

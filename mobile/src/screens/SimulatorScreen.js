@@ -60,10 +60,7 @@ const SimulatorScreen = ({ navigation }) => {
     setSubmitting(true);
     
     try {
-      const userData = await api.get('/auth/me').catch(() => ({ data: { id: 1 } })); // Fallback ID
-      
       await api.post('/simulator/submit', {
-        userId: userData.data?.id || 1,
         scenarioId: currentScenario.id,
         choicesMade: [{
           step: 1,
