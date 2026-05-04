@@ -36,4 +36,10 @@ public class ForumService {
         post.getComments().add(comment);
         return forumPostRepository.save(post);
     }
+
+    public ForumPost toggleLike(String postId) {
+        ForumPost post = getPostById(postId);
+        post.setLikes(post.getLikes() + 1); // Simple implementation
+        return forumPostRepository.save(post);
+    }
 }

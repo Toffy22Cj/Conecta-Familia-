@@ -47,4 +47,28 @@ public class AppointmentService {
     public List<Appointment> getSpecialistAppointments(Long specialistId) {
         return appointmentRepository.findBySpecialistId(specialistId);
     }
+
+    public List<Appointment> getAll() {
+        return appointmentRepository.findAll();
+    }
+
+    public void delete(Long id) {
+        appointmentRepository.deleteById(id);
+    }
+
+    public Appointment updateStatus(Long id, String status) {
+        Appointment appointment = appointmentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Appointment not found"));
+        try {
+            appointment.setStatus(AppointmentStatus.valueOf(status.toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            // Fallback or handle specific statuses from frontend
+            if (status.equalsIgnoreCase("completada")) {
+                appointment.setStatus(AppointmentStatus.COMPLETED);
+            } else {
+                appointment.setStatus(AppointmentStatus.PENDING);
+            }
+        }
+        return appointmentRepository.save(appointment);
+    }
 }

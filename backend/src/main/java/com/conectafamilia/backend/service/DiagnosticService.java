@@ -40,4 +40,8 @@ public class DiagnosticService {
         if (totalScore <= 70) return "Moderado";
         return "Fortalecido";
     }
+
+    public List<DiagnosticResult> getHistory() {
+        return repository.findAll();
+    }
 }

@@ -23,17 +23,22 @@ public class Appointment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @jakarta.validation.constraints.NotNull(message = "El usuario es obligatorio")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "specialist_id", nullable = false)
+    @jakarta.validation.constraints.NotNull(message = "El especialista es obligatorio")
     private User specialist;
 
     @Column(name = "appointment_date", nullable = false)
+    @jakarta.validation.constraints.NotNull(message = "La fecha es obligatoria")
+    @jakarta.validation.constraints.Future(message = "La fecha debe ser en el futuro")
     private LocalDateTime appointmentDate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @jakarta.validation.constraints.NotNull(message = "El estado es obligatorio")
     private AppointmentStatus status;
 
     @Column(columnDefinition = "TEXT")

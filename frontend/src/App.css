@@ -1,3 +1,23 @@
+:root {
+  --primary: #6366f1;
+  --primary-light: #818cf8;
+  --primary-dark: #4f46e5;
+  --secondary: #a855f7;
+  --accent: #f43f5e;
+  --dark: #0f172a;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --background: #f8fafc;
+  --surface: rgba(255, 255, 255, 0.8);
+  --glass: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 12px 30px -4px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 20px 40px -8px rgba(99, 102, 241, 0.15);
+  --radius-md: 12px;
+  --radius-lg: 24px;
+}
+
 /* Fixed Full-Width Navbar */
 .navbar-fixed {
   position: fixed;
@@ -5,10 +25,10 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  padding: 1rem 0;
+  padding: 0.75rem 0;
   background: var(--glass);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--glass-border);
   box-shadow: var(--shadow-soft);
 }
@@ -71,18 +91,24 @@ html {
   border-radius: var(--radius-md);
   font-weight: 600;
   font-size: 0.95rem;
-  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-  box-shadow: 0 8px 15px -3px rgba(79, 70, 229, 0.2);
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  box-shadow: 0 8px 20px -4px rgba(99, 102, 241, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
+  border: none;
+  cursor: pointer;
 }
 
 .btn-primary:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.3);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 20px 30px -10px rgba(99, 102, 241, 0.4);
   filter: brightness(1.1);
+}
+
+.btn-primary:active {
+  transform: translateY(-1px) scale(0.98);
 }
 
 .animate-spin {
@@ -92,6 +118,42 @@ html {
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 .btn-outline {

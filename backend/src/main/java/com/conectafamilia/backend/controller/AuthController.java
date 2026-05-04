@@ -47,17 +47,17 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest signUpRequest) {
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
+        if (userRepository.existsByEmail(registerRequest.getEmail())) {
             return ResponseEntity.badRequest().body("Error: Email is already in use!");
         }
 
         User user = User.builder()
-                .fullName(signUpRequest.getFullName())
-                .email(signUpRequest.getEmail())
-                .password(encoder.encode(signUpRequest.getPassword()))
-                .role(signUpRequest.getRole())
-                .clientType(signUpRequest.getClientType())
+                .fullName(registerRequest.getFullName())
+                .email(registerRequest.getEmail())
+                .password(encoder.encode(registerRequest.getPassword()))
+                .role(registerRequest.getRole())
+                .clientType(registerRequest.getClientType())
                 .build();
 
         userRepository.save(user);

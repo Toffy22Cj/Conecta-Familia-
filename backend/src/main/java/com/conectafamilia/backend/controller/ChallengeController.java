@@ -11,7 +11,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/challenges")
+@RequestMapping("/api/retos")
 public class ChallengeController {
 
     @Autowired
@@ -22,12 +22,13 @@ public class ChallengeController {
         return ResponseEntity.ok(challengeService.getAllChallenges());
     }
 
-    @PostMapping("/{challengeId}/complete")
-    public ResponseEntity<UserChallengeStatus> completeChallenge(
-            @PathVariable String challengeId, 
-            @RequestParam Long userId) {
-        // Ideally userId comes from JWT principal in a real app
-        return ResponseEntity.ok(challengeService.markAsCompleted(userId, challengeId));
+    @PatchMapping("/{id}/toggle")
+    public ResponseEntity<UserChallengeStatus> toggleChallenge(
+            @PathVariable String id, 
+            @RequestParam(required = false) Long userId) {
+        // En un caso real, userId vendría del principal
+        Long actualUserId = (userId != null) ? userId : 1L;
+        return ResponseEntity.ok(challengeService.markAsCompleted(actualUserId, id));
     }
 
     @GetMapping("/progress/{userId}")

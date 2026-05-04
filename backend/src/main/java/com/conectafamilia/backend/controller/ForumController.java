@@ -10,28 +10,38 @@ import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/forum")
+@RequestMapping("/api/foro")
 public class ForumController {
 
     @Autowired
     private ForumService forumService;
 
-    @GetMapping("/posts")
-    public ResponseEntity<List<ForumPost>> getAllPosts() {
+    @GetMapping("/threads")
+    public ResponseEntity<List<ForumPost>> getAllThreads() {
         return ResponseEntity.ok(forumService.getAllPosts());
     }
 
-    @GetMapping("/posts/{id}")
-    public ResponseEntity<ForumPost> getPostById(@PathVariable String id) {
+    @GetMapping("/threads/{id}")
+    public ResponseEntity<ForumPost> getThreadById(@PathVariable String id) {
         return ResponseEntity.ok(forumService.getPostById(id));
     }
 
-    @PostMapping("/posts")
-    public ResponseEntity<ForumPost> createPost(@RequestBody ForumPost post) {
+    @PostMapping("/threads")
+    public ResponseEntity<ForumPost> createThread(@RequestBody ForumPost post, org.springframework.security.core.Authentication authentication) {
+        if (authentication != null && authentication.getPrincipal() instanceof com.conectafamilia.backend.model.entity.User) {
+            com.conectafamilia.backend.model.entity.User user = (com.conectafamilia.backend.model.entity.User) authentication.getPrincipal();
+            post.setAuthorId(user.getId().toString());
+            post.setAuthorName(user.getFullName());
+        }
         return ResponseEntity.ok(forumService.createPost(post));
     }
 
-    @PostMapping("/posts/{id}/comments")
+    @PostMapping("/threads/{id}/like")
+    public ResponseEntity<ForumPost> toggleLike(@PathVariable String id) {
+        return ResponseEntity.ok(forumService.toggleLike(id));
+    }
+
+    @PostMapping("/threads/{id}/comments")
     public ResponseEntity<ForumPost> addComment(@PathVariable String id, @RequestBody ForumPost.Comment comment) {
         return ResponseEntity.ok(forumService.addComment(id, comment));
     }

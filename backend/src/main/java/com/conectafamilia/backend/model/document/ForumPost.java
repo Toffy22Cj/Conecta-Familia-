@@ -1,15 +1,16 @@
 package com.conectafamilia.backend.model.document;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Document(collection = "forum_posts")
 @Data
@@ -26,6 +27,7 @@ public class ForumPost {
     private String authorName; // Denormalized for read performance
     private LocalDateTime createdAt;
     private List<String> tags;
+    private int likes;
     
     @Builder.Default
     private List<Comment> comments = new ArrayList<>();
