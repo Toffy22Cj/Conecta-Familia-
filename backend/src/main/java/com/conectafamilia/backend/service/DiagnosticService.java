@@ -1,13 +1,14 @@
 package com.conectafamilia.backend.service;
 
-import com.conectafamilia.backend.model.document.DiagnosticResult;
+import com.conectafamilia.backend.model.entity.DiagnosticResult;
 import com.conectafamilia.backend.model.dto.DiagnosticSubmissionDTO;
 import com.conectafamilia.backend.model.dto.QuestionResponseDTO;
-import com.conectafamilia.backend.repository.mongo.DiagnosticResultRepository;
+import com.conectafamilia.backend.repository.jpa.DiagnosticResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,7 +30,7 @@ public class DiagnosticService {
                 .responses(submission.getResponses())
                 .totalScore(totalScore)
                 .profile(profile)
-                .recommendationsSeen(List.of()) // Default empty list
+                .recommendationsSeen(new ArrayList<>())
                 .build();
 
         return repository.save(result);

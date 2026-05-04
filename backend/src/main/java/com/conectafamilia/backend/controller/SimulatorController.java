@@ -1,7 +1,7 @@
 package com.conectafamilia.backend.controller;
 
-import com.conectafamilia.backend.model.document.Scenario;
-import com.conectafamilia.backend.model.document.SimulatorLog;
+import com.conectafamilia.backend.model.entity.Scenario;
+import com.conectafamilia.backend.model.entity.SimulatorLog;
 import com.conectafamilia.backend.service.SimulatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

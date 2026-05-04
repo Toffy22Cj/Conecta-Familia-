@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.conectafamilia.backend.model.document.DiagnosticResult;
+import com.conectafamilia.backend.model.entity.DiagnosticResult;
 import com.conectafamilia.backend.model.dto.DiagnosticSubmissionDTO;
 import com.conectafamilia.backend.model.dto.QuestionResponseDTO;
 import com.conectafamilia.backend.model.entity.User;

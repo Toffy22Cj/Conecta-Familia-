@@ -133,31 +133,48 @@ export const foroService = {
   },
 };
 
+const mapAppointmentStatus = (status) => {
+  switch ((status || "").toUpperCase()) {
+    case "COMPLETED":
+      return "completada";
+    case "CANCELLED":
+      return "cancelada";
+    case "CONFIRMED":
+    case "PENDING":
+      return "proxima";
+    default:
+      return status || "proxima";
+  }
+};
+
+const mapAppointment = (c) => ({
+  ...c,
+  name: c.specialist?.fullName || "Especialista",
+  especialidad: "Psicología",
+  fecha: c.appointmentDate
+    ? new Date(c.appointmentDate).toLocaleDateString()
+    : "Pendiente",
+  hora: c.appointmentDate
+    ? new Date(c.appointmentDate).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "",
+  tipo: c.notes || "Sesión",
+  avatar: c.specialist?.fullName
+    ? c.specialist.fullName.substring(0, 2).toUpperCase()
+    : "ES",
+  status: mapAppointmentStatus(c.status),
+});
+
 export const citasService = {
   getAll: async () => {
     const response = await api.get("/citas");
-    return response.data.map((c) => ({
-      ...c,
-      name: c.specialist?.fullName || "Especialista",
-      especialidad: "Psicología", // Default or map if available
-      fecha: c.appointmentDate
-        ? new Date(c.appointmentDate).toLocaleDateString()
-        : "Pendiente",
-      hora: c.appointmentDate
-        ? new Date(c.appointmentDate).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })
-        : "",
-      tipo: c.notes || "Sesión",
-      avatar: c.specialist?.fullName
-        ? c.specialist.fullName.substring(0, 2).toUpperCase()
-        : "ES",
-    }));
+    return response.data.map(mapAppointment);
   },
   create: async (citaData) => {
     const response = await api.post("/citas", citaData);
-    return response.data;
+    return mapAppointment(response.data);
   },
   updateStatus: async (id, status) => {
     const response = await api.patch(`/citas/${id}`, { status });

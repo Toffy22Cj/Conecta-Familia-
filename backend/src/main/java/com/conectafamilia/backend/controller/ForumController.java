@@ -1,6 +1,6 @@
 package com.conectafamilia.backend.controller;
 
-import com.conectafamilia.backend.model.document.ForumPost;
+import com.conectafamilia.backend.model.entity.ForumPost;
 import com.conectafamilia.backend.service.ForumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

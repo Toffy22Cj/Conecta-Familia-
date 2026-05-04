@@ -24,8 +24,8 @@ public class UserChallengeStatus {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "challenge_id", nullable = false)
-    private String challengeId; // Referencia a MongoDB
+    @Column(name = "challenge_id", nullable = false, length = 100)
+    private String challengeId;
 
     @Column(nullable = false)
     private Boolean completed;

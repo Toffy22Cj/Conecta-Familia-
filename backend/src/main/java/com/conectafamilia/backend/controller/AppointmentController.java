@@ -1,11 +1,12 @@
 package com.conectafamilia.backend.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.conectafamilia.backend.model.entity.Appointment;
-import com.conectafamilia.backend.model.entity.User;
+import com.conectafamilia.backend.model.dto.AppointmentRequest;
+import com.conectafamilia.backend.model.dto.AppointmentResponse;
 import com.conectafamilia.backend.service.AppointmentService;
+
+import jakarta.validation.Valid;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -29,36 +32,35 @@ public class AppointmentController {
     private AppointmentService appointmentService;
 
     @GetMapping
-    public ResponseEntity<List<Appointment>> getAll() {
-        return ResponseEntity.ok(appointmentService.getAll());
+    public ResponseEntity<List<AppointmentResponse>> getAll() {
+        List<AppointmentResponse> appointments = appointmentService.getAll().stream()
+                .map(AppointmentResponse::from)
+                .toList();
+        return ResponseEntity.ok(appointments);
     }
 
     @PostMapping
-    public ResponseEntity<Appointment> create(@jakarta.validation.Valid @RequestBody Appointment appointment, Authentication authentication) {
-        Long userId = 1L;
-        if (authentication != null && authentication.getPrincipal() instanceof User) {
-            Long authenticatedUserId = ((User) authentication.getPrincipal()).getId();
-            if (authenticatedUserId != null) {
-                userId = authenticatedUserId;
-            }
+    public ResponseEntity<AppointmentResponse> create(
+            @Valid @RequestBody AppointmentRequest request,
+            Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Debe iniciar sesión para agendar una cita");
         }
-        Long specialistId = 2L;
-        if (appointment.getSpecialist() != null && appointment.getSpecialist().getId() != null) {
-            specialistId = appointment.getSpecialist().getId();
-        }
-        LocalDateTime appointmentDate = appointment.getAppointmentDate() != null ? appointment.getAppointmentDate() : LocalDateTime.now();
-        return ResponseEntity.ok(appointmentService.bookAppointment(
-                userId,
-                specialistId,
-                appointmentDate,
-                appointment.getNotes()
-        ));
+
+        return ResponseEntity.ok(AppointmentResponse.from(appointmentService.bookAppointmentForUser(
+                authentication.getName(),
+                request.getSpecialistId(),
+                request.getAppointmentDate(),
+                request.getNotes())));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Appointment> updateStatus(@PathVariable Long id, @jakarta.validation.Valid @RequestBody java.util.Map<String, String> body) {
+    public ResponseEntity<AppointmentResponse> updateStatus(
+            @PathVariable Long id,
+            @Valid @RequestBody java.util.Map<String, String> body) {
         String status = body.get("status");
-        return ResponseEntity.ok(appointmentService.updateStatus(id, status));
+        return ResponseEntity.ok(AppointmentResponse.from(
+                appointmentService.updateStatus(id, status)));
     }
 
     @DeleteMapping("/{id}")

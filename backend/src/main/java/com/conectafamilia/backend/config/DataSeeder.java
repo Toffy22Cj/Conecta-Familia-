@@ -1,15 +1,15 @@
 package com.conectafamilia.backend.config;
 
-import com.conectafamilia.backend.model.document.Scenario;
+import com.conectafamilia.backend.model.entity.Scenario;
 import com.conectafamilia.backend.model.entity.User;
 import com.conectafamilia.backend.model.enums.ClientType;
 import com.conectafamilia.backend.model.enums.Role;
-import com.conectafamilia.backend.repository.mongo.ScenarioRepository;
+import com.conectafamilia.backend.repository.jpa.ScenarioRepository;
 import com.conectafamilia.backend.repository.jpa.UserRepository;
-import com.conectafamilia.backend.repository.mongo.ChallengeRepository;
-import com.conectafamilia.backend.repository.mongo.ForumPostRepository;
-import com.conectafamilia.backend.model.document.Challenge;
-import com.conectafamilia.backend.model.document.ForumPost;
+import com.conectafamilia.backend.repository.jpa.ChallengeRepository;
+import com.conectafamilia.backend.repository.jpa.ForumPostRepository;
+import com.conectafamilia.backend.model.entity.Challenge;
+import com.conectafamilia.backend.model.entity.ForumPost;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -87,6 +87,7 @@ public class DataSeeder implements CommandLineRunner {
     private void seedChallenges() {
         if (challengeRepository.count() == 0) {
             Challenge challenge1 = Challenge.builder()
+                    .id("cena_sin_pantallas")
                     .title("Cena sin pantallas")
                     .description(
                             "Disfruten de una comida familiar completa sin usar teléfonos móviles, tabletas ni televisión. Aprovechen para preguntarse cómo les fue en el día.")
@@ -95,6 +96,7 @@ public class DataSeeder implements CommandLineRunner {
                     .build();
 
             Challenge challenge2 = Challenge.builder()
+                    .id("escucha_activa_10_minutos")
                     .title("Escucha activa de 10 minutos")
                     .description(
                             "Dedica 10 minutos ininterrumpidos a escuchar a tu hijo/a sobre un tema de su interés sin juzgar, interrumpir ni dar consejos no solicitados.")
@@ -129,6 +131,7 @@ public class DataSeeder implements CommandLineRunner {
                             "Hola a todos, mi hijo de 4 años suele hacer rabietas cuando vamos al supermercado y no le compro dulces. ¿Qué estrategias les han funcionado a ustedes para manejar esta situación sin perder la paciencia?")
                     .authorId("user_padre_123")
                     .authorName("Carlos Padre")
+                    .category("Niños Pequeños")
                     .createdAt(LocalDateTime.now().minusDays(2))
                     .tags(List.of("Disciplina", "Berrinches", "Niños Pequeños"))
                     .build();
