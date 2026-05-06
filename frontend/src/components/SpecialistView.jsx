@@ -1,5 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { Users, Trophy, Search, Activity, Clock, ChevronRight } from "lucide-react";
+import {
+  Users,
+  Trophy,
+  Search,
+  Activity,
+  Clock,
+  ChevronRight,
+} from "lucide-react";
 import { diagnosticoService, specialistService } from "../services/api";
 
 const profileLabelClass = (profile) => {
@@ -29,8 +36,9 @@ function SpecialistView() {
         setPatients(users || []);
         setResults(history || []);
       } catch (e) {
-        console.error("Error al cargar datos de especialistas", e);
-        setError("No se pudo cargar la lista de usuarios o resultados en este momento.");
+        setError(
+          "No se pudo cargar la lista de usuarios o resultados en este momento.",
+        );
       } finally {
         setLoading(false);
       }
@@ -67,13 +75,17 @@ function SpecialistView() {
     });
   }, [combinedPatients, query, profileFilter]);
 
-  const completedCount = combinedPatients.filter((patient) => patient.latestResult).length;
+  const completedCount = combinedPatients.filter(
+    (patient) => patient.latestResult,
+  ).length;
   const averageScore = completedCount
     ? Math.round(
         combinedPatients
           .filter((patient) => patient.latestResult)
-          .reduce((sum, patient) => sum + (patient.latestResult.totalScore || 0), 0) /
-          completedCount,
+          .reduce(
+            (sum, patient) => sum + (patient.latestResult.totalScore || 0),
+            0,
+          ) / completedCount,
       )
     : 0;
   const riskCount = combinedPatients.filter(
@@ -97,10 +109,12 @@ function SpecialistView() {
         </div>
         <div className="section-stats">
           <div className="stat-chip">
-            <Users size={16} /> <strong>{combinedPatients.length}</strong> pacientes
+            <Users size={16} /> <strong>{combinedPatients.length}</strong>{" "}
+            pacientes
           </div>
           <div className="stat-chip">
-            <Trophy size={16} /> <strong>{averageScore}</strong> puntaje promedio
+            <Trophy size={16} /> <strong>{averageScore}</strong> puntaje
+            promedio
           </div>
           <div className="stat-chip">
             <Activity size={16} /> <strong>{riskCount}</strong> casos en riesgo
@@ -177,14 +191,18 @@ function SpecialistView() {
                   {patient.latestResult ? " / 100" : ""}
                 </td>
                 <td>
-                  <span className={profileLabelClass(patient.latestResult?.profile)}>
+                  <span
+                    className={profileLabelClass(patient.latestResult?.profile)}
+                  >
                     {patient.latestResult?.profile || "Sin diagnóstico"}
                   </span>
                 </td>
                 <td>{patient.attempts}</td>
                 <td>
                   {patient.latestResult?.timestamp
-                    ? new Date(patient.latestResult.timestamp).toLocaleDateString()
+                    ? new Date(
+                        patient.latestResult.timestamp,
+                      ).toLocaleDateString()
                     : "N/A"}
                 </td>
               </tr>
@@ -197,7 +215,8 @@ function SpecialistView() {
         <div>
           <h3>Acciones recomendadas</h3>
           <p>
-            Revisa las familias con puntajes bajos y envíales recomendaciones personalizadas.
+            Revisa las familias con puntajes bajos y envíales recomendaciones
+            personalizadas.
           </p>
         </div>
         <button className="btn-primary" type="button">

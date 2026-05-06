@@ -303,7 +303,6 @@ function Dashboard({ onNavigate }) {
         if (citasRes.status === "fulfilled") setCitas(citasRes.value);
         if (specsRes.status === "fulfilled") setSpecialists(specsRes.value);
       } catch (error) {
-        console.error("Error fetching data:", error);
         showSaved("⚠ Error de conexión con el servidor. Usando datos locales.");
       }
     };
@@ -316,9 +315,7 @@ function Dashboard({ onNavigate }) {
   const toggleReto = async (id) => {
     try {
       await retosService.toggleComplete(id);
-    } catch {
-      console.warn("API toggleReto failed.");
-    }
+    } catch {}
     setRetos((prev) =>
       prev.map((r) => (r.id === id ? { ...r, completed: !r.completed } : r)),
     );
@@ -358,26 +355,20 @@ function Dashboard({ onNavigate }) {
             : t,
         ),
       );
-    } catch {
-      console.warn("API toggleLike failed.");
-    }
+    } catch {}
   };
 
   const cancelCita = async (id) => {
     try {
       await citasService.delete(id);
-    } catch {
-      console.warn("API cancelCita failed.");
-    }
+    } catch {}
     setCitas((prev) => prev.filter((c) => c.id !== id));
   };
 
   const completarCita = async (id) => {
     try {
       await citasService.updateStatus(id, "completada");
-    } catch {
-      console.warn("API completarCita failed.");
-    }
+    } catch {}
     setCitas((prev) =>
       prev.map((c) => (c.id === id ? { ...c, status: "completada" } : c)),
     );
@@ -396,9 +387,7 @@ function Dashboard({ onNavigate }) {
     if (diagnosticoStep === 11 && diagnosticoResponses.length === 10) {
       try {
         await diagnosticoService.saveResult(diagnosticoResponses);
-      } catch {
-        console.warn("API saveResult failed.");
-      }
+      } catch {}
     }
     setDiagnosticoStep(0);
     setDiagnosticoScore(0);
@@ -614,7 +603,6 @@ function Dashboard({ onNavigate }) {
       setShowNewCita(false);
       showSaved("✓ Cita agendada correctamente");
     } catch (e) {
-      console.error("Error creating appointment", e);
       showSaved(
         "⚠ No se pudo agendar la cita. Intenta iniciar sesión de nuevo.",
       );
@@ -647,7 +635,6 @@ function Dashboard({ onNavigate }) {
       });
       showSaved("✓ Perfil guardado correctamente");
     } catch (error) {
-      console.error("Error updating profile", error);
       showSaved("⚠ No se pudo actualizar el perfil.");
     }
   };
@@ -665,7 +652,6 @@ function Dashboard({ onNavigate }) {
       setPasswords({ actual: "", nueva: "" });
       showSaved("✓ Contraseña actualizada");
     } catch (error) {
-      console.error("Error changing password", error);
       showSaved("⚠ No se pudo actualizar la contraseña.");
     }
   };

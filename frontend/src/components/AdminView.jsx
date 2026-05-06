@@ -1,5 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { Users, Shield, Search, ChevronRight, CheckCircle, UserPlus } from "lucide-react";
+import {
+  Users,
+  Shield,
+  Search,
+  ChevronRight,
+  CheckCircle,
+  UserPlus,
+} from "lucide-react";
 import SpecialistView from "./SpecialistView";
 import { adminService, diagnosticoService } from "../services/api";
 
@@ -24,7 +31,6 @@ function AdminView() {
         setUsers(usersRes || []);
         setResults(historyRes || []);
       } catch (e) {
-        console.error("Error cargando datos de admin", e);
         setError("No se pudieron cargar los datos de administración.");
       } finally {
         setLoading(false);
@@ -44,7 +50,6 @@ function AdminView() {
       );
       setMessage("Usuario promovido a especialista correctamente.");
     } catch (e) {
-      console.error("Error promoviendo usuario", e);
       setError("No se pudo promover al usuario. Intenta nuevamente.");
     } finally {
       setPromotingId(null);
@@ -85,7 +90,8 @@ function AdminView() {
             <Users size={16} /> <strong>{users.length}</strong> cuentas
           </div>
           <div className="stat-chip">
-            <UserPlus size={16} /> <strong>{specialistCount}</strong> especialistas
+            <UserPlus size={16} /> <strong>{specialistCount}</strong>{" "}
+            especialistas
           </div>
           <div className="stat-chip">
             <CheckCircle size={16} /> <strong>{patientCount}</strong> usuarios
@@ -152,7 +158,9 @@ function AdminView() {
                             Promover a especialista
                           </button>
                         ) : (
-                          <span className="status-pill status-pill-strong">{user.role}</span>
+                          <span className="status-pill status-pill-strong">
+                            {user.role}
+                          </span>
                         )}
                       </td>
                     </tr>

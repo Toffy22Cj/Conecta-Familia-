@@ -44,7 +44,6 @@ function App() {
           await authService.getMe();
           setCurrentView("dashboard");
         } catch (error) {
-          console.warn("Token invalid, redirecting to home");
           localStorage.removeItem("token");
           localStorage.removeItem("user");
           setCurrentView("home");
