@@ -90,7 +90,6 @@ const TermsAndConditions = ({ onNavigate }) => {
           </p>
           <ul>
             <li>Email: soporte@conectafamilia.com</li>
-            <li>Teléfono: +57 123 456 7890</li>
           </ul>
         </section>
       </div>

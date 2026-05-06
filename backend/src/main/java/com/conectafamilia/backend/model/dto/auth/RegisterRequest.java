@@ -5,7 +5,6 @@ import com.conectafamilia.backend.model.enums.Role;
 import lombok.Data;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Data
@@ -22,9 +21,7 @@ public class RegisterRequest {
     @Size(min = 6, max = 40, message = "La contraseña debe tener entre 6 y 40 caracteres")
     private String password;
 
-    @NotNull
     private Role role;
 
-    @NotNull
     private ClientType clientType;
 }

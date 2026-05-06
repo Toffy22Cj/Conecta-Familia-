@@ -6,6 +6,7 @@ import com.conectafamilia.backend.model.enums.Role;
 import com.conectafamilia.backend.repository.jpa.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,12 +21,15 @@ public class SpecialistController {
     private UserRepository userRepository;
 
     @GetMapping
-    public ResponseEntity<List<User>> getSpecialists() {
-        List<User> specialists = userRepository.findByRole(Role.ESPECIALISTA);
+    public ResponseEntity<List<UserSummaryDTO>> getSpecialists() {
+        List<UserSummaryDTO> specialists = userRepository.findByRole(Role.ESPECIALISTA).stream()
+                .map(UserSummaryDTO::from)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(specialists);
     }
 
     @GetMapping("/pacientes")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ESPECIALISTA')")
     public ResponseEntity<List<UserSummaryDTO>> getPacientes() {
         List<User> patients = userRepository.findByRole(Role.USUARIO);
         List<UserSummaryDTO> dtos = patients.stream()

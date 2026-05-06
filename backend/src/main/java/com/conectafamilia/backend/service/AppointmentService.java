@@ -76,13 +76,58 @@ public class AppointmentService {
         return appointmentRepository.findAll();
     }
 
+    public List<Appointment> getAppointmentsForUser(User user) {
+        if (user.getRole() == Role.ADMIN) {
+            return appointmentRepository.findAll();
+        }
+        if (user.getRole() == Role.ESPECIALISTA) {
+            return appointmentRepository.findBySpecialistId(user.getId());
+        }
+        return appointmentRepository.findByUserId(user.getId());
+    }
+
     public void delete(Long id) {
         appointmentRepository.deleteById(id);
+    }
+
+    public void deleteForUser(Long id, User user) {
+        Appointment appointment = findAppointmentForUser(id, user);
+        appointmentRepository.delete(appointment);
+    }
+
+    public Appointment updateStatusForUser(Long id, String status, User user) {
+        Appointment appointment = findAppointmentForUser(id, user);
+        updateAppointmentStatus(appointment, status);
+        return appointmentRepository.save(appointment);
     }
 
     public Appointment updateStatus(Long id, String status) {
         Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Appointment not found"));
+        updateAppointmentStatus(appointment, status);
+        return appointmentRepository.save(appointment);
+    }
+
+    private Appointment findAppointmentForUser(Long id, User user) {
+        Appointment appointment = appointmentRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Appointment not found"));
+        if (!canAccessAppointment(appointment, user)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No puede modificar esta cita");
+        }
+        return appointment;
+    }
+
+    private boolean canAccessAppointment(Appointment appointment, User user) {
+        if (user.getRole() == Role.ADMIN) {
+            return true;
+        }
+        Long userId = user.getId();
+        Long ownerId = appointment.getUser() != null ? appointment.getUser().getId() : null;
+        Long specialistId = appointment.getSpecialist() != null ? appointment.getSpecialist().getId() : null;
+        return userId != null && (userId.equals(ownerId) || userId.equals(specialistId));
+    }
+
+    private void updateAppointmentStatus(Appointment appointment, String status) {
         if (status == null || status.isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Status is required");
         }
@@ -96,6 +141,5 @@ public class AppointmentService {
                 appointment.setStatus(AppointmentStatus.PENDING);
             }
         }
-        return appointmentRepository.save(appointment);
     }
 }

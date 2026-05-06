@@ -39,16 +39,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                    System.out.println("Autenticación establecida para: " + username);
                 } else {
                     System.err.println("Token JWT inválido recibido");
-                }
-            } else {
-                // No hay token, esto es normal en rutas públicas como /api/auth/**
-                // Pero útil para depurar si falla en rutas protegidas
-                String path = request.getRequestURI();
-                if (!path.startsWith("/api/auth/")) {
-                    System.out.println("No se encontró token JWT en la ruta protegida: " + path);
                 }
             }
         } catch (Exception e) {

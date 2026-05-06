@@ -22,15 +22,23 @@ if (storedToken) {
   setAuthHeader(storedToken);
 }
 
+const storeUser = (userData) => {
+  const normalizedUser = {
+    id: userData.id,
+    email: userData.email,
+    role: userData.role,
+    fullName: userData.fullName,
+  };
+  localStorage.setItem("user", JSON.stringify(normalizedUser));
+  return normalizedUser;
+};
+
 // Interceptor para agregar el token si existe
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
     config.headers = config.headers || {};
     config.headers.Authorization = `Bearer ${token}`;
-    console.log("[Axios] Token inyectado para:", config.url);
-  } else {
-    console.log("[Axios] Sin token para:", config.url);
   }
   return config;
 });
@@ -59,14 +67,7 @@ export const authService = {
     if (response.data.token) {
       localStorage.setItem("token", response.data.token);
       setAuthHeader(response.data.token);
-      console.log("[Auth] Token guardado, length:", response.data.token.length);
-      // Guardar el objeto de usuario con la info recibida
-      const userData = {
-        email: response.data.email,
-        role: response.data.role,
-        fullName: response.data.fullName,
-      };
-      localStorage.setItem("user", JSON.stringify(userData));
+      storeUser(response.data);
     }
     return response.data;
   },
@@ -76,7 +77,6 @@ export const authService = {
       ...userData,
       email: userData.email.trim().toLowerCase(),
       fullName: userData.fullName.trim(),
-      role: userData.role || "USUARIO",
       clientType: userData.clientType || "INDIVIDUAL",
     };
     delete cleanData.nombre;
@@ -87,6 +87,17 @@ export const authService = {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setAuthHeader(null);
+  },
+  getMe: async () => {
+    const response = await api.get("/auth/me");
+    return storeUser(response.data);
+  },
+  updateProfile: async ({ fullName }) => {
+    const response = await api.patch("/auth/me", { fullName });
+    return storeUser(response.data);
+  },
+  changePassword: async ({ currentPassword, newPassword }) => {
+    await api.patch("/auth/password", { currentPassword, newPassword });
   },
 };
 
@@ -121,6 +132,24 @@ export const foroService = {
         ? new Date(t.createdAt).toLocaleDateString()
         : "Reciente",
       avatar: t.authorName ? t.authorName.substring(0, 2).toUpperCase() : "U",
+      liked: t.likedBy
+        ? t.likedBy.includes(
+            localStorage.getItem("user")
+              ? JSON.parse(localStorage.getItem("user")).id
+              : null,
+          )
+        : false,
+      comments: t.comments
+        ? t.comments.map((c) => ({
+            ...c,
+            time: c.createdAt
+              ? new Date(c.createdAt).toLocaleDateString()
+              : "Ahora",
+            avatar: c.authorName
+              ? c.authorName.substring(0, 2).toUpperCase()
+              : "U",
+          }))
+        : [],
     }));
   },
   createThread: async (threadData) => {
@@ -129,6 +158,29 @@ export const foroService = {
   },
   toggleLike: async (id) => {
     const response = await api.post(`/foro/threads/${id}/like`);
+    return response.data;
+  },
+  addComment: async (threadId, commentData) => {
+    const response = await api.post(
+      `/foro/threads/${threadId}/comments`,
+      commentData,
+    );
+    return response.data;
+  },
+  editComment: async (threadId, commentId, newContent) => {
+    const response = await api.put(
+      `/foro/threads/${threadId}/comments/${commentId}`,
+      newContent,
+      {
+        headers: { "Content-Type": "text/plain" },
+      },
+    );
+    return response.data;
+  },
+  deleteComment: async (threadId, commentId) => {
+    const response = await api.delete(
+      `/foro/threads/${threadId}/comments/${commentId}`,
+    );
     return response.data;
   },
 };

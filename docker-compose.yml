@@ -1,3 +1,4 @@
+version: "3.9"
 services:
   mariadb:
     image: mariadb:latest
@@ -9,3 +10,37 @@ services:
       MYSQL_PASSWORD: admin
     ports:
       - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: conectafamilia_backend
+    depends_on:
+      - mariadb
+    environment:
+      DB_HOST: mariadb
+      DB_NAME: conectafamilia_db
+      DB_USER: admin
+      DB_PASS: admin
+      PORT: 8080
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: conectafamilia_frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+
+volumes:
+  db_data:

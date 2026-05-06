@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useCallback, useState, useEffect } from "react";
 import {
   Smile,
   Meh,
@@ -35,11 +35,15 @@ import {
 import SpecialistView from "./SpecialistView";
 import AdminView from "./AdminView";
 
+const canUseSpecialistPanel = (user) =>
+  user?.role === "ESPECIALISTA" || user?.role === "ADMIN";
+
+const canUseAdminPanel = (user) => user?.role === "ADMIN";
+
 function Dashboard({ onNavigate }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("inicio");
   const [selectedMood, setSelectedMood] = useState(null);
-  const [loading, setLoading] = useState(false);
 
   // ── RETOS STATE ──
   const [retos, setRetos] = useState([
@@ -101,56 +105,7 @@ function Dashboard({ onNavigate }) {
 
   // ── FORO STATE ──
   const [foroTab, setForoTab] = useState("Todos");
-  const [foroThreads, setForoThreads] = useState([
-    {
-      id: 1,
-      avatar: "MA",
-      author: "María A.",
-      time: "Hace 2 horas",
-      category: "Adolescentes",
-      title: "¿Cómo manejar los cambios de humor en adolescentes?",
-      body: "Mi hijo de 14 años ha estado muy irritable últimamente. ¿Alguien ha pasado por algo similar?",
-      replies: 15,
-      likes: 23,
-      liked: false,
-    },
-    {
-      id: 2,
-      avatar: "CP",
-      author: "Carlos P.",
-      time: "Hace 5 horas",
-      category: "Convivencia",
-      title: "Tips para la primera noche en la nueva casa",
-      body: "Nos mudamos la próxima semana y mis hijos están nerviosos. ¿Qué les funcionó a ustedes?",
-      replies: 8,
-      likes: 12,
-      liked: false,
-    },
-    {
-      id: 3,
-      avatar: "LR",
-      author: "Laura R.",
-      time: "Hace 1 día",
-      category: "Comunicación",
-      title: "Rutinas de la mañana que cambiaron nuestra dinámica",
-      body: "Quiero compartir cómo una simple rutina matutina mejoró la relación con mis hijos antes de ir al colegio.",
-      replies: 32,
-      likes: 45,
-      liked: true,
-    },
-    {
-      id: 4,
-      avatar: "JM",
-      author: "Juan M.",
-      time: "Hace 2 días",
-      category: "Emociones",
-      title: "¿Cómo hablar de emociones con niños pequeños?",
-      body: "Mi hija de 5 años no sabe expresar lo que siente. ¿Qué técnicas usan para ayudar?",
-      replies: 19,
-      likes: 28,
-      liked: false,
-    },
-  ]);
+  const [foroThreads, setForoThreads] = useState([]);
 
   // ── CITAS STATE ──
   const [citas, setCitas] = useState([]);
@@ -167,9 +122,8 @@ function Dashboard({ onNavigate }) {
 
   // ── AJUSTES STATE ──
   const [perfil, setPerfil] = useState({
-    nombre: "Familia González",
-    correo: "familia@correo.com",
-    telefono: "",
+    nombre: "Usuario",
+    correo: "",
   });
   const [currentUser, setCurrentUser] = useState(null);
   const [notifs, setNotifs] = useState({
@@ -180,12 +134,26 @@ function Dashboard({ onNavigate }) {
   const [passwords, setPasswords] = useState({ actual: "", nueva: "" });
   const [savedMsg, setSavedMsg] = useState("");
 
+  const showSaved = useCallback((msg) => {
+    setSavedMsg(msg);
+    setTimeout(() => setSavedMsg(""), 2500);
+  }, []);
+
   // ── FORO: nuevo tema ──
   const [showNewThread, setShowNewThread] = useState(false);
   const [newThread, setNewThread] = useState({
     title: "",
     body: "",
     category: "Comunicación",
+  });
+
+  // ── FORO: comentarios ──
+  const [expandedThreads, setExpandedThreads] = useState(new Set());
+  const [newComment, setNewComment] = useState({ threadId: null, body: "" });
+  const [editingComment, setEditingComment] = useState({
+    threadId: null,
+    commentId: null,
+    body: "",
   });
 
   // ── SIMULADOR (DIAGNÓSTICO) STATE ──
@@ -294,41 +262,53 @@ function Dashboard({ onNavigate }) {
       return;
     }
 
-    const fetchData = async () => {
-      setLoading(true);
+    const applyUser = (user) => {
+      setCurrentUser(user);
+      setPerfil({
+        nombre: user.fullName || user.nombre || "Usuario",
+        correo: user.email || user.correo || "",
+      });
+    };
+
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
       try {
-        const [retosRes, threadsRes, citasRes, specsRes] =
+        applyUser(JSON.parse(savedUser));
+      } catch {
+        authService.logout();
+        onNavigate("login");
+        return;
+      }
+    }
+
+    const fetchData = async () => {
+      try {
+        const [meRes, retosRes, threadsRes, citasRes, specsRes] =
           await Promise.allSettled([
+            authService.getMe(),
             retosService.getAll(),
             foroService.getThreads(),
             citasService.getAll(),
             citasService.getSpecialists(),
           ]);
 
+        if (meRes.status === "fulfilled") applyUser(meRes.value);
+        if (meRes.status === "rejected") {
+          authService.logout();
+          onNavigate("login");
+          return;
+        }
         if (retosRes.status === "fulfilled") setRetos(retosRes.value);
         if (threadsRes.status === "fulfilled") setForoThreads(threadsRes.value);
         if (citasRes.status === "fulfilled") setCitas(citasRes.value);
         if (specsRes.status === "fulfilled") setSpecialists(specsRes.value);
-
-        const savedUser = localStorage.getItem("user");
-        if (savedUser) {
-          const user = JSON.parse(savedUser);
-          setCurrentUser(user);
-          setPerfil({
-            nombre: user.fullName || user.nombre || "Usuario",
-            correo: user.email || user.correo || "",
-            telefono: user.telefono || "",
-          });
-        }
       } catch (error) {
         console.error("Error fetching data:", error);
         showSaved("⚠ Error de conexión con el servidor. Usando datos locales.");
-      } finally {
-        setLoading(false);
       }
     };
     fetchData();
-  }, []);
+  }, [onNavigate, showSaved]);
 
   // ── HANDLERS ──
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
@@ -336,7 +316,7 @@ function Dashboard({ onNavigate }) {
   const toggleReto = async (id) => {
     try {
       await retosService.toggleComplete(id);
-    } catch (e) {
+    } catch {
       console.warn("API toggleReto failed.");
     }
     setRetos((prev) =>
@@ -346,27 +326,47 @@ function Dashboard({ onNavigate }) {
 
   const toggleLike = async (id) => {
     try {
-      await foroService.toggleLike(id);
-    } catch (e) {
+      const updated = await foroService.toggleLike(id);
+      setForoThreads((prev) =>
+        prev.map((t) =>
+          t.id === id
+            ? {
+                ...updated,
+                body: updated.content || "",
+                author: updated.authorName || "Usuario",
+                time: updated.createdAt
+                  ? new Date(updated.createdAt).toLocaleDateString()
+                  : "Reciente",
+                avatar: updated.authorName
+                  ? updated.authorName.substring(0, 2).toUpperCase()
+                  : "U",
+                liked: updated.likedBy
+                  ? updated.likedBy.includes(currentUser?.id)
+                  : false,
+                comments: updated.comments
+                  ? updated.comments.map((c) => ({
+                      ...c,
+                      time: c.createdAt
+                        ? new Date(c.createdAt).toLocaleDateString()
+                        : "Ahora",
+                      avatar: c.authorName
+                        ? c.authorName.substring(0, 2).toUpperCase()
+                        : "U",
+                    }))
+                  : [],
+              }
+            : t,
+        ),
+      );
+    } catch {
       console.warn("API toggleLike failed.");
     }
-    setForoThreads((prev) =>
-      prev.map((t) =>
-        t.id === id
-          ? {
-              ...t,
-              liked: !t.liked,
-              likes: t.liked ? t.likes - 1 : t.likes + 1,
-            }
-          : t,
-      ),
-    );
   };
 
   const cancelCita = async (id) => {
     try {
       await citasService.delete(id);
-    } catch (e) {
+    } catch {
       console.warn("API cancelCita failed.");
     }
     setCitas((prev) => prev.filter((c) => c.id !== id));
@@ -375,7 +375,7 @@ function Dashboard({ onNavigate }) {
   const completarCita = async (id) => {
     try {
       await citasService.updateStatus(id, "completada");
-    } catch (e) {
+    } catch {
       console.warn("API completarCita failed.");
     }
     setCitas((prev) =>
@@ -396,7 +396,7 @@ function Dashboard({ onNavigate }) {
     if (diagnosticoStep === 11 && diagnosticoResponses.length === 10) {
       try {
         await diagnosticoService.saveResult(diagnosticoResponses);
-      } catch (e) {
+      } catch {
         console.warn("API saveResult failed.");
       }
     }
@@ -423,16 +423,162 @@ function Dashboard({ onNavigate }) {
       replies: 0,
       likes: 0,
       liked: false,
+      comments: [],
     };
     try {
       const created = await foroService.createThread(payload);
       setForoThreads((prev) => [created, ...prev]);
-    } catch (e) {
+    } catch {
       setForoThreads((prev) => [{ id: Date.now(), ...payload }, ...prev]);
     }
     setNewThread({ title: "", body: "", category: "Comunicación" });
     setShowNewThread(false);
     showSaved("✓ Tema publicado en el foro");
+  };
+
+  const toggleExpandThread = (threadId) => {
+    setExpandedThreads((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(threadId)) {
+        newSet.delete(threadId);
+      } else {
+        newSet.add(threadId);
+      }
+      return newSet;
+    });
+  };
+
+  const addComment = (threadId) => {
+    if (!newComment.body.trim()) return;
+    const commentData = {
+      content: newComment.body.trim(),
+    };
+    foroService
+      .addComment(threadId, commentData)
+      .then((updated) => {
+        setForoThreads((prev) =>
+          prev.map((t) =>
+            t.id === threadId
+              ? {
+                  ...updated,
+                  body: updated.content || "",
+                  author: updated.authorName || "Usuario",
+                  time: updated.createdAt
+                    ? new Date(updated.createdAt).toLocaleDateString()
+                    : "Reciente",
+                  avatar: updated.authorName
+                    ? updated.authorName.substring(0, 2).toUpperCase()
+                    : "U",
+                  liked: updated.likedBy
+                    ? updated.likedBy.includes(currentUser?.id)
+                    : false,
+                  comments: updated.comments
+                    ? updated.comments.map((c) => ({
+                        ...c,
+                        time: c.createdAt
+                          ? new Date(c.createdAt).toLocaleDateString()
+                          : "Ahora",
+                        avatar: c.authorName
+                          ? c.authorName.substring(0, 2).toUpperCase()
+                          : "U",
+                      }))
+                    : [],
+                }
+              : t,
+          ),
+        );
+        setNewComment({ threadId: null, body: "" });
+        showSaved("✓ Comentario agregado");
+      })
+      .catch(() => {
+        showSaved("⚠ No se pudo agregar el comentario");
+      });
+  };
+
+  const editComment = (threadId, commentId) => {
+    if (!editingComment.body.trim()) return;
+    foroService
+      .editComment(threadId, commentId, editingComment.body.trim())
+      .then((updated) => {
+        setForoThreads((prev) =>
+          prev.map((t) =>
+            t.id === threadId
+              ? {
+                  ...updated,
+                  body: updated.content || "",
+                  author: updated.authorName || "Usuario",
+                  time: updated.createdAt
+                    ? new Date(updated.createdAt).toLocaleDateString()
+                    : "Reciente",
+                  avatar: updated.authorName
+                    ? updated.authorName.substring(0, 2).toUpperCase()
+                    : "U",
+                  liked: updated.likedBy
+                    ? updated.likedBy.includes(currentUser?.id)
+                    : false,
+                  comments: updated.comments
+                    ? updated.comments.map((c) => ({
+                        ...c,
+                        time: c.createdAt
+                          ? new Date(c.createdAt).toLocaleDateString()
+                          : "Ahora",
+                        avatar: c.authorName
+                          ? c.authorName.substring(0, 2).toUpperCase()
+                          : "U",
+                      }))
+                    : [],
+                }
+              : t,
+          ),
+        );
+        setEditingComment({ threadId: null, commentId: null, body: "" });
+        showSaved("✓ Comentario editado");
+      })
+      .catch(() => {
+        showSaved("⚠ No se pudo editar el comentario");
+      });
+  };
+
+  const deleteComment = (threadId, commentId) => {
+    foroService
+      .deleteComment(threadId, commentId)
+      .then((updated) => {
+        setForoThreads((prev) =>
+          prev.map((t) =>
+            t.id === threadId
+              ? {
+                  ...updated,
+                  body: updated.content || "",
+                  author: updated.authorName || "Usuario",
+                  time: updated.createdAt
+                    ? new Date(updated.createdAt).toLocaleDateString()
+                    : "Reciente",
+                  avatar: updated.authorName
+                    ? updated.authorName.substring(0, 2).toUpperCase()
+                    : "U",
+                  liked: updated.likedBy
+                    ? updated.likedBy.includes(currentUser?.id)
+                    : false,
+                  comments: updated.comments
+                    ? updated.comments.map((c) => ({
+                        ...c,
+                        time: c.createdAt
+                          ? new Date(c.createdAt).toLocaleDateString()
+                          : "Ahora",
+                        avatar: c.authorName
+                          ? c.authorName.substring(0, 2).toUpperCase()
+                          : "U",
+                      }))
+                    : [],
+                }
+              : t,
+          ),
+        );
+        showSaved("✓ Comentario eliminado");
+      })
+      .catch(() => {
+        showSaved("⚠ No se pudo eliminar el comentario");
+      });
   };
 
   const addCita = async () => {
@@ -451,10 +597,7 @@ function Dashboard({ onNavigate }) {
         ...prev,
         {
           ...created,
-          name:
-            specialist?.fullName ||
-            created.name ||
-            "Especialista",
+          name: specialist?.fullName || created.name || "Especialista",
           fecha: newCita.fecha,
           hora: newCita.hora,
           status: "proxima",
@@ -472,13 +615,10 @@ function Dashboard({ onNavigate }) {
       showSaved("✓ Cita agendada correctamente");
     } catch (e) {
       console.error("Error creating appointment", e);
-      showSaved("⚠ No se pudo agendar la cita. Intenta iniciar sesión de nuevo.");
+      showSaved(
+        "⚠ No se pudo agendar la cita. Intenta iniciar sesión de nuevo.",
+      );
     }
-  };
-
-  const showSaved = (msg) => {
-    setSavedMsg(msg);
-    setTimeout(() => setSavedMsg(""), 2500);
   };
 
   const retosCompleted = retos.filter((r) => r.completed).length;
@@ -491,14 +631,57 @@ function Dashboard({ onNavigate }) {
     onNavigate("home", e);
   };
 
+  const saveProfile = async () => {
+    if (!perfil.nombre.trim()) {
+      showSaved("⚠ El nombre no puede estar vacío.");
+      return;
+    }
+    try {
+      const updatedUser = await authService.updateProfile({
+        fullName: perfil.nombre.trim(),
+      });
+      setCurrentUser(updatedUser);
+      setPerfil({
+        nombre: updatedUser.fullName || "Usuario",
+        correo: updatedUser.email || "",
+      });
+      showSaved("✓ Perfil guardado correctamente");
+    } catch (error) {
+      console.error("Error updating profile", error);
+      showSaved("⚠ No se pudo actualizar el perfil.");
+    }
+  };
+
+  const changePassword = async () => {
+    if (!passwords.actual || passwords.nueva.length < 6) {
+      showSaved("⚠ La nueva contraseña debe tener al menos 6 caracteres.");
+      return;
+    }
+    try {
+      await authService.changePassword({
+        currentPassword: passwords.actual,
+        newPassword: passwords.nueva,
+      });
+      setPasswords({ actual: "", nueva: "" });
+      showSaved("✓ Contraseña actualizada");
+    } catch (error) {
+      console.error("Error changing password", error);
+      showSaved("⚠ No se pudo actualizar la contraseña.");
+    }
+  };
+
   const menuItems = [
     { id: "inicio", label: "Inicio", icon: Home },
     { id: "retos", label: "Retos Semanales", icon: Target },
     { id: "diagnostico", label: "Diagnóstico Familiar", icon: HeartHandshake },
     { id: "foro", label: "Foro Comunitario", icon: MessageCircle },
     { id: "citas", label: "Agenda de Citas", icon: Calendar },
-    { id: "especialistas", label: "Panel de Especialista", icon: Users },
-    ...(currentUser?.role === "ADMIN" ? [{ id: "admin", label: "Administración", icon: Settings }] : []),
+    ...(canUseSpecialistPanel(currentUser)
+      ? [{ id: "especialistas", label: "Panel de Especialista", icon: Users }]
+      : []),
+    ...(canUseAdminPanel(currentUser)
+      ? [{ id: "admin", label: "Administración", icon: Settings }]
+      : []),
     { id: "ajustes", label: "Ajustes", icon: Settings },
   ];
 
@@ -852,9 +1035,12 @@ function Dashboard({ onNavigate }) {
                 <span>
                   <Clock size={14} /> {thread.time}
                 </span>
-                <span>
+                <button
+                  className="foro-comment-btn"
+                  onClick={() => toggleExpandThread(thread.id)}
+                >
                   <MessageSquare size={14} /> {thread.replies} respuestas
-                </span>
+                </button>
                 <button
                   className={`foro-like-btn ${thread.liked ? "foro-liked" : ""}`}
                   onClick={() => toggleLike(thread.id)}
@@ -863,6 +1049,141 @@ function Dashboard({ onNavigate }) {
                 </button>
               </div>
             </div>
+            {expandedThreads.has(thread.id) && (
+              <div className="foro-comments-section">
+                <div className="foro-comments-list">
+                  {thread.comments.map((comment) => (
+                    <div key={comment.id} className="foro-comment">
+                      <div className="foro-comment-avatar">
+                        {comment.avatar}
+                      </div>
+                      <div className="foro-comment-content">
+                        <div className="foro-comment-header">
+                          <span className="foro-comment-author">
+                            {comment.author}
+                          </span>
+                          <span className="foro-comment-time">
+                            {comment.time}
+                          </span>
+                          {comment.authorId === currentUser?.id && (
+                            <div className="foro-comment-actions">
+                              <button
+                                className="foro-comment-edit-btn"
+                                onClick={() =>
+                                  setEditingComment({
+                                    threadId: thread.id,
+                                    commentId: comment.id,
+                                    body: comment.content,
+                                  })
+                                }
+                              >
+                                Editar
+                              </button>
+                              <button
+                                className="foro-comment-delete-btn"
+                                onClick={() =>
+                                  deleteComment(thread.id, comment.id)
+                                }
+                              >
+                                Eliminar
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                        {editingComment.threadId === thread.id &&
+                        editingComment.commentId === comment.id ? (
+                          <div>
+                            <textarea
+                              className="form-control"
+                              value={editingComment.body}
+                              onChange={(e) =>
+                                setEditingComment({
+                                  ...editingComment,
+                                  body: e.target.value,
+                                })
+                              }
+                              rows={2}
+                              style={{ marginBottom: "0.5rem" }}
+                            />
+                            <div style={{ display: "flex", gap: "0.5rem" }}>
+                              <button
+                                className="btn-primary btn-small"
+                                onClick={() =>
+                                  editComment(thread.id, comment.id)
+                                }
+                              >
+                                Guardar
+                              </button>
+                              <button
+                                className="btn-outline btn-small"
+                                onClick={() =>
+                                  setEditingComment({
+                                    threadId: null,
+                                    commentId: null,
+                                    body: "",
+                                  })
+                                }
+                              >
+                                Cancelar
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <p>{comment.content}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="foro-new-comment">
+                  <textarea
+                    className="form-control"
+                    placeholder="Escribe un comentario..."
+                    rows={2}
+                    value={
+                      newComment.threadId === thread.id ? newComment.body : ""
+                    }
+                    onChange={(e) =>
+                      setNewComment({
+                        threadId: thread.id,
+                        body: e.target.value,
+                      })
+                    }
+                    style={{
+                      padding: "0.75rem",
+                      resize: "vertical",
+                      minHeight: "60px",
+                    }}
+                  />
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "0.5rem",
+                      marginTop: "0.5rem",
+                    }}
+                  >
+                    <button
+                      className="btn-primary btn-small"
+                      onClick={() => addComment(thread.id)}
+                      disabled={
+                        !newComment.body.trim() ||
+                        newComment.threadId !== thread.id
+                      }
+                    >
+                      Comentar
+                    </button>
+                    <button
+                      className="btn-outline btn-small"
+                      onClick={() =>
+                        setNewComment({ threadId: null, body: "" })
+                      }
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -1107,22 +1428,7 @@ function Dashboard({ onNavigate }) {
                 className="form-control"
                 placeholder="tu@correo.com"
                 value={perfil.correo}
-                onChange={(e) =>
-                  setPerfil({ ...perfil, correo: e.target.value })
-                }
-                style={{ paddingLeft: "1rem" }}
-              />
-            </div>
-            <div className="ajuste-field">
-              <label>Teléfono</label>
-              <input
-                type="tel"
-                className="form-control"
-                placeholder="+57 300 000 0000"
-                value={perfil.telefono}
-                onChange={(e) =>
-                  setPerfil({ ...perfil, telefono: e.target.value })
-                }
+                readOnly
                 style={{ paddingLeft: "1rem" }}
               />
             </div>
@@ -1130,7 +1436,7 @@ function Dashboard({ onNavigate }) {
           <button
             className="btn-primary btn-small"
             style={{ alignSelf: "flex-start", marginTop: "0.5rem" }}
-            onClick={() => showSaved("✓ Perfil guardado correctamente")}
+            onClick={saveProfile}
           >
             Guardar cambios
           </button>
@@ -1232,10 +1538,7 @@ function Dashboard({ onNavigate }) {
           <button
             className="btn-outline btn-small"
             style={{ alignSelf: "flex-start", marginTop: "0.5rem" }}
-            onClick={() => {
-              setPasswords({ actual: "", nueva: "" });
-              showSaved("✓ Contraseña actualizada");
-            }}
+            onClick={changePassword}
           >
             Cambiar contraseña
           </button>
@@ -1378,9 +1681,13 @@ function Dashboard({ onNavigate }) {
       case "citas":
         return renderCitas();
       case "especialistas":
-        return <SpecialistView />;
+        return canUseSpecialistPanel(currentUser) ? (
+          <SpecialistView />
+        ) : (
+          renderInicio()
+        );
       case "admin":
-        return <AdminView />;
+        return canUseAdminPanel(currentUser) ? <AdminView /> : renderInicio();
       case "ajustes":
         return renderAjustes();
       case "inicio":

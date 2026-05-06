@@ -55,7 +55,6 @@ public class DataSeeder implements CommandLineRunner {
                     .clientType(ClientType.INDIVIDUAL)
                     .build();
             userRepository.save(admin);
-            System.out.println("Usuario admin creado: admin@conectafamilia.com / ConectaFamilia789!");
         }
     }
 
@@ -80,7 +79,6 @@ public class DataSeeder implements CommandLineRunner {
                     .build();
 
             scenarioRepository.save(scenario1);
-            System.out.println("Escenario de prueba insertado.");
         }
     }
 
@@ -105,7 +103,6 @@ public class DataSeeder implements CommandLineRunner {
                     .build();
 
             challengeRepository.saveAll(List.of(challenge1, challenge2));
-            System.out.println("Retos familiares de prueba insertados.");
         }
     }
 
@@ -119,7 +116,6 @@ public class DataSeeder implements CommandLineRunner {
                     .clientType(ClientType.INDIVIDUAL)
                     .build();
             userRepository.save(specialist);
-            System.out.println("Usuario especialista creado: especialista@conectafamilia.com");
         }
     }
 
@@ -158,7 +154,6 @@ public class DataSeeder implements CommandLineRunner {
             post.getComments().add(comment2);
 
             forumPostRepository.save(post);
-            System.out.println("Post de foro de prueba insertado con respuestas.");
         }
     }
 }

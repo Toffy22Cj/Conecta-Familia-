@@ -1,10 +1,15 @@
 package com.conectafamilia.backend.controller;
 
-import com.conectafamilia.backend.model.entity.Challenge;
+import com.conectafamilia.backend.model.dto.ChallengeResponse;
+import com.conectafamilia.backend.model.entity.User;
 import com.conectafamilia.backend.model.entity.UserChallengeStatus;
+import com.conectafamilia.backend.model.enums.Role;
 import com.conectafamilia.backend.service.ChallengeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,21 +23,40 @@ public class ChallengeController {
     private ChallengeService challengeService;
 
     @GetMapping
-    public ResponseEntity<List<Challenge>> getAllChallenges() {
-        return ResponseEntity.ok(challengeService.getAllChallenges());
+    public ResponseEntity<List<ChallengeResponse>> getAllChallenges(Authentication authentication) {
+        User user = getAuthenticatedUser(authentication);
+        return ResponseEntity.ok(challengeService.getChallengesForUser(user.getId()));
     }
 
     @PatchMapping("/{id}/toggle")
     public ResponseEntity<UserChallengeStatus> toggleChallenge(
-            @PathVariable String id, 
-            @RequestParam(required = false) Long userId) {
-        // En un caso real, userId vendría del principal
-        Long actualUserId = (userId != null) ? userId : 1L;
-        return ResponseEntity.ok(challengeService.markAsCompleted(actualUserId, id));
+            @PathVariable String id,
+            Authentication authentication) {
+        User user = getAuthenticatedUser(authentication);
+        return ResponseEntity.ok(challengeService.markAsCompleted(user.getId(), id));
     }
 
     @GetMapping("/progress/{userId}")
-    public ResponseEntity<List<UserChallengeStatus>> getUserProgress(@PathVariable Long userId) {
+    public ResponseEntity<List<UserChallengeStatus>> getUserProgress(
+            @PathVariable Long userId,
+            Authentication authentication) {
+        User user = getAuthenticatedUser(authentication);
+        if (!user.getId().equals(userId) && user.getRole() != Role.ADMIN) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No puede consultar progreso de otro usuario");
+        }
         return ResponseEntity.ok(challengeService.getUserProgress(userId));
+    }
+
+    @GetMapping("/progress")
+    public ResponseEntity<List<UserChallengeStatus>> getOwnProgress(Authentication authentication) {
+        User user = getAuthenticatedUser(authentication);
+        return ResponseEntity.ok(challengeService.getUserProgress(user.getId()));
+    }
+
+    private User getAuthenticatedUser(Authentication authentication) {
+        if (authentication != null && authentication.getPrincipal() instanceof User user) {
+            return user;
+        }
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuario no autenticado");
     }
 }

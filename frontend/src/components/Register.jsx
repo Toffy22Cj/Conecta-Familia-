@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { authService } from "../services/api";
 
-function Register({ onNavigate, onAuth }) {
+function Register({ onNavigate }) {
   const [formData, setFormData] = useState({
     nombres: "",
     apellidos: "",
@@ -43,7 +43,6 @@ function Register({ onNavigate, onAuth }) {
         fullName: `${formData.nombres.trim()} ${formData.apellidos.trim()}`,
         email: formData.email,
         password: formData.password,
-        role: "USUARIO",
         clientType: "INDIVIDUAL",
       };
       await authService.register(payload);

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.conectafamilia.backend.model.dto.AppointmentRequest;
 import com.conectafamilia.backend.model.dto.AppointmentResponse;
+import com.conectafamilia.backend.model.entity.User;
 import com.conectafamilia.backend.service.AppointmentService;
 
 import jakarta.validation.Valid;
@@ -32,8 +33,9 @@ public class AppointmentController {
     private AppointmentService appointmentService;
 
     @GetMapping
-    public ResponseEntity<List<AppointmentResponse>> getAll() {
-        List<AppointmentResponse> appointments = appointmentService.getAll().stream()
+    public ResponseEntity<List<AppointmentResponse>> getAll(Authentication authentication) {
+        User user = getAuthenticatedUser(authentication);
+        List<AppointmentResponse> appointments = appointmentService.getAppointmentsForUser(user).stream()
                 .map(AppointmentResponse::from)
                 .toList();
         return ResponseEntity.ok(appointments);
@@ -43,12 +45,10 @@ public class AppointmentController {
     public ResponseEntity<AppointmentResponse> create(
             @Valid @RequestBody AppointmentRequest request,
             Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Debe iniciar sesión para agendar una cita");
-        }
+        User user = getAuthenticatedUser(authentication);
 
         return ResponseEntity.ok(AppointmentResponse.from(appointmentService.bookAppointmentForUser(
-                authentication.getName(),
+                user.getEmail(),
                 request.getSpecialistId(),
                 request.getAppointmentDate(),
                 request.getNotes())));
@@ -57,15 +57,23 @@ public class AppointmentController {
     @PatchMapping("/{id}")
     public ResponseEntity<AppointmentResponse> updateStatus(
             @PathVariable Long id,
-            @Valid @RequestBody java.util.Map<String, String> body) {
+            @Valid @RequestBody java.util.Map<String, String> body,
+            Authentication authentication) {
         String status = body.get("status");
         return ResponseEntity.ok(AppointmentResponse.from(
-                appointmentService.updateStatus(id, status)));
+                appointmentService.updateStatusForUser(id, status, getAuthenticatedUser(authentication))));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        appointmentService.delete(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id, Authentication authentication) {
+        appointmentService.deleteForUser(id, getAuthenticatedUser(authentication));
         return ResponseEntity.ok().build();
+    }
+
+    private User getAuthenticatedUser(Authentication authentication) {
+        if (authentication != null && authentication.getPrincipal() instanceof User user) {
+            return user;
+        }
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Debe iniciar sesión para agendar una cita");
     }
 }

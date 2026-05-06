@@ -17,7 +17,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OrderColumn;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -62,8 +61,19 @@ public class ForumPost {
     @Builder.Default
     private List<String> tags = new ArrayList<>();
 
-    @Column(nullable = false)
-    private int likes;
+    @ElementCollection
+    @CollectionTable(name = "forum_post_likes", joinColumns = @JoinColumn(name = "forum_post_id"))
+    @Column(name = "user_id", length = 100)
+    @Builder.Default
+    private List<String> likedBy = new ArrayList<>();
+
+    public int getLikes() {
+        return likedBy == null ? 0 : likedBy.size();
+    }
+
+    public boolean isLikedBy(String userId) {
+        return likedBy != null && likedBy.contains(userId);
+    }
     
     @ElementCollection
     @CollectionTable(name = "forum_post_comments", joinColumns = @JoinColumn(name = "forum_post_id"))

@@ -45,4 +45,8 @@ public class DiagnosticService {
     public List<DiagnosticResult> getHistory() {
         return repository.findAll();
     }
+
+    public List<DiagnosticResult> getHistoryForUser(Long userId) {
+        return repository.findByUserId(userId);
+    }
 }

@@ -57,3 +57,40 @@ Para que el móvil se conecte a tu backend local, recuerda que ambos deben estar
 Puedes ver el detalle de todos los archivos creados en el
 walkthrough.md
 .
+
+## 5. Despliegue y CI/CD
+
+Este proyecto se puede ejecutar con Docker Compose y también incluir un pipeline de integración continua.
+
+### Despliegue local con Docker Compose
+
+1. Construye y levanta los servicios:
+   ```bash
+   docker compose up -d --build
+   ```
+2. Abre la aplicación web en:
+   - Frontend: `http://localhost:3000`
+   - Backend: `http://localhost:8080`
+
+### Variables de entorno recomendadas
+
+Crea un archivo `.env` basado en `.env.example` si necesitas ajustar las credenciales o los puertos.
+
+### Pipeline de CI/CD
+
+El repositorio incluye workflows de GitHub Actions para:
+
+- compilar y ejecutar pruebas del backend Java
+- construir el frontend React
+- construir las imágenes Docker del backend y frontend
+- desplegar automáticamente a un VPS mediante SSH cuando se configuran secretos en GitHub
+
+Para activar el despliegue automático, agrega los secretos:
+
+- `DEPLOY_HOST`
+- `DEPLOY_USER`
+- `DEPLOY_PRIVATE_KEY`
+- `DEPLOY_PORT`
+- `DEPLOY_PATH`
+
+Luego usa el workflow `Deploy to VPS` o despliega desde la rama `main`.
