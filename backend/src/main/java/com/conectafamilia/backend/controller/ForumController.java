@@ -11,7 +11,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/foro")
+@RequestMapping("/foro")
 public class ForumController {
 
     @Autowired
