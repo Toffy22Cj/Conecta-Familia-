@@ -9,8 +9,6 @@ import {
   ShieldCheck,
   Heart,
   BrainCircuit,
-  MessageCircle,
-  Star,
 } from "lucide-react";
 import "./App.css";
 import heroImg from "./assets/hero_family.png";
@@ -220,18 +218,6 @@ function App() {
                     familias. Participa en debates diarios, comparte tus logros
                     y recibe ánimos de personas que realmente te entienden.
                   </p>
-                  <div className="community-stats">
-                    <div className="stat-item">
-                      <MessageCircle className="stat-icon" size={24} />
-                      <strong>+2,000</strong>
-                      <span>Mensajes</span>
-                    </div>
-                    <div className="stat-item">
-                      <Star className="stat-icon" size={24} />
-                      <strong>4.9/5</strong>
-                      <span>Valoración</span>
-                    </div>
-                  </div>
                   <button
                     className="btn-primary"
                     style={{ marginTop: "1.5rem" }}

@@ -4,7 +4,7 @@ import { Platform } from "react-native";
 
 // IMPORTANTE: Cambia esta IP por la IP local de tu máquina para probar en dispositivo real
 // Si usas el emulador de Android, usa 10.0.2.2
-const BASE_URL = "http://45.7.229.128:8080/api";
+const BASE_URL = "http://192.168.1.3:8080/api";
 
 const api = axios.create({
   baseURL: BASE_URL,
