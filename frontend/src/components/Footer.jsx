@@ -1,5 +1,5 @@
-import React from 'react';
-import { HeartHandshake, Mail, Phone, MapPin } from 'lucide-react';
+﻿import React from 'react';
+import { HeartHandshake } from 'lucide-react';
 
 const Footer = ({ onNavigate }) => {
   return (
@@ -27,30 +27,21 @@ const Footer = ({ onNavigate }) => {
         </div>
 
         <div className="footer-section">
-          <h3>Contacto</h3>
-          <div className="contact-info">
-            <div className="contact-item">
-              <Mail size={18} />
-              <span>soporte@conectafamilia.com</span>
-            </div>
-            <div className="contact-item">
-              <Phone size={18} />
-              <span>+57 123 456 7890</span>
-            </div>
-            <div className="contact-item">
-              <MapPin size={18} />
-              <span>Bogotá, Colombia</span>
-            </div>
-          </div>
+          <h3>Desarrolladores</h3>
+          <ul>
+            <li><a href="mailto:ronnycaraballo46@gmail.com">ronnycaraballo46@gmail.com</a></li>
+            <li><a href="mailto:cjpp12220@gmail.com">cjpp12220@gmail.com</a></li>
+          </ul>
         </div>
 
         <div className="footer-section">
-          <h3>Síguenos</h3>
-          <div className="social-links">
-            <a href="#" className="social-link">Facebook</a>
-            <a href="#" className="social-link">Instagram</a>
-            <a href="#" className="social-link">Twitter</a>
-          </div>
+          <h3>Especialistas</h3>
+          <ul>
+            <li>+57 321 4986917 • Lilimar</li>
+            <li>+57 321 3032574 • Emely</li>
+            <li>+57 301 3715894 • Nellys</li>
+            <li>+57 312 4859120 • Rosa</li>
+          </ul>
         </div>
       </div>
 
