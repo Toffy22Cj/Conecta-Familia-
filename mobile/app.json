@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
+    "name": "Conecta Familia",
+    "slug": "conecta-familia",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -27,7 +27,7 @@
       },
       "edgeToEdgeEnabled": false,
       "usesCleartextTraffic": true,
-      "package": "com.toffy22cj.mobile"
+      "package": "com.conectafamilia.mobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -38,7 +38,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "6f819ddd-4787-46d8-b54e-551eab4a4025"
+        "projectId": "df1290d0-8068-4af9-87c0-54ccb6141947"
       }
     }
   }

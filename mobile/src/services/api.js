@@ -2,9 +2,9 @@ import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
 
-// IMPORTANTE: Cambia esta IP por la IP local de tu máquina para probar en dispositivo real
-// Si usas el emulador de Android, usa 10.0.2.2
-const BASE_URL = "http://192.168.1.3:8080/api";
+// IMPORTANTE: Usa la URL de tu servidor público.
+// Para la instalación remota en VPS, usa el host Nginx en el puerto 3000.
+const BASE_URL = "http://45.7.229.128:3000/api";
 
 const api = axios.create({
   baseURL: BASE_URL,
